@@ -8,27 +8,62 @@
 
 #import "ViewController.h"
 #import "GGKeyChain.h"
+#import "GGButton.h"
 
 @interface ViewController ()
-
+@property (nonatomic, strong) GGButton *button;
 @end
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+//    NSString *key = @"com.gg.keychain.test000";
+//    NSString *value = @"GGHAHAHA";
+//    
+//    NSString *keyChainValue = [GGKeyChain getStringForKey:key];
+//    NSLog(@"keyChainValue = %@", keyChainValue);
+//    
+//    [GGKeyChain setString:value forKey:key];
+//    
+//    keyChainValue = [GGKeyChain getStringForKey:key];
+//    NSLog(@"keyChainValue = %@", keyChainValue);
+
+    // normal UIButton
+    _button = [[GGButton alloc] init];
+    [_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_button setImage:[UIImage imageNamed:@"icon_selected"] forState:UIControlStateNormal];
+    [_button setImage:[UIImage imageNamed:@"ic_gift"] forState:UIControlStateHighlighted];
+    [_button setTitle:@"Normal" forState:UIControlStateNormal];
+    [_button setTitle:@"Selected" forState:UIControlStateHighlighted];
+    [_button addTarget:self action:@selector(buttonClick) forControlEvents:UIControlEventTouchUpInside];
     
-    NSString *key = @"com.gg.keychain.test000";
-    NSString *value = @"GGHAHAHA";
+    _button.imageView.backgroundColor = [UIColor colorWithRed:0.30 green:0.94 blue:0.99 alpha:0.6];
+    _button.titleLabel.backgroundColor = [UIColor colorWithRed:0.99 green:0.52 blue:0.44 alpha:0.6];
+    _button.backgroundColor = [UIColor colorWithRed:0.75 green:0.99 blue:0.38 alpha:1];
     
-    NSString *keyChainValue = [GGKeyChain getStringForKey:key];
-    NSLog(@"keyChainValue = %@", keyChainValue);
+    _button.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 15, 10);
+    _button.frame = CGRectMake(100, 100, 100, 100);
+    [self.view addSubview:_button];
     
+    // GGButton
+    _button.imageTitleSpace = 10;
+    _button.imageRate = 0.5;
+    _button.imageDirection = GGButtonImageAtTop;
+//    [_button setSpace:10 rate:0.5 direction:GGButtonImageAtTop];
     
-    [GGKeyChain setString:value forKey:key];
+}
+
+- (void)buttonClick {
+    CGFloat space = arc4random() % 20 + 5;              // (5 - 25)
+    CGFloat rate  = (arc4random() % 50 + 25) / 100.0;   // (0.25 - 0.75)
+    NSUInteger direction = arc4random() % 4;
+    NSLog(@"space : %lf, rate : %.2lf, direction : %lu", space, rate, direction);
     
-    keyChainValue = [GGKeyChain getStringForKey:key];
-    NSLog(@"keyChainValue = %@", keyChainValue);
+    [UIView animateWithDuration:0.4 animations:^{
+        [_button setSpace:space rate:rate direction:direction];
+    }];
 }
 
 @end

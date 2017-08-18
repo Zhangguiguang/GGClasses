@@ -8,21 +8,23 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum : NSUInteger {
+typedef NS_ENUM(NSUInteger, GGButtonImageDirection) {
     GGButtonImageAtLeft = 0,
     GGButtonImageAtRight = 2,
     GGButtonImageAtTop = 1,
     GGButtonImageAtBottom = 3,
-} GGButtonImageDirection;
+};
 
 @interface GGButton : UIButton
 
-@property (nonatomic, assign) CGFloat ggImageTitleSpace;
+- (void)setSpace:(CGFloat)space rate:(CGFloat)rate direction:(GGButtonImageDirection)direction;
 
-// default = 0.7;
-@property (nonatomic, assign) CGFloat ggImageRate;
+@property (nonatomic, assign) CGFloat imageTitleSpace;
+
+// default 0.7
+@property (nonatomic, assign) CGFloat imageRate;
 
 // default = GGButtonImageAtLeft
-@property (nonatomic, assign) GGButtonImageDirection ggImageDirection;
+@property (nonatomic, assign) GGButtonImageDirection imageDirection;
 
 @end
