@@ -13,7 +13,7 @@
 @property (nonatomic, assign) CGRect imageRect;
 @property (nonatomic, assign) CGRect titleRect;
 
-@property (nonatomic, assign) CGSize cacheSize;
+@property (nonatomic, assign) CGRect cacheRect;
 @property (nonatomic, assign) BOOL needRecalculate;
 
 @end
@@ -46,90 +46,55 @@
 }
 
 #pragma mark - override
-- (void)setContentEdgeInsets:(UIEdgeInsets)contentEdgeInsets {
-    _needRecalculate = YES;
-    [super setContentEdgeInsets:contentEdgeInsets];
-}
-
 - (CGRect)imageRectForContentRect:(CGRect)contentRect {
-    [self calculateImageAndTitleFrame];
+    [self calculateImageAndTitleRectWithContentRect:contentRect];
     return _imageRect;
 }
 
 - (CGRect)titleRectForContentRect:(CGRect)contentRect {
-    [self calculateImageAndTitleFrame];
+    [self calculateImageAndTitleRectWithContentRect:contentRect];
     return _titleRect;
 }
 
 #pragma mark - private function
-- (void)calculateImageAndTitleFrame {
-    if (!CGSizeEqualToSize(_cacheSize, self.bounds.size)) {
+- (void)calculateImageAndTitleRectWithContentRect:(CGRect)contentRect {
+    if (!CGRectEqualToRect(_cacheRect, contentRect)) {
         _needRecalculate = YES;
     }
     
     if (_needRecalculate == NO) {
         return ;
     }
-//    NSLog(@"calculateImageAndTitleFrame");
+    NSLog(@"calculateImageAndTitleFrame");
     // recalculate _imageRect _titleRect
-    CGFloat usefulWidth  = self.bounds.size.width  - self.contentEdgeInsets.left - self.contentEdgeInsets.right;
-    CGFloat usefulHeight = self.bounds.size.height - self.contentEdgeInsets.top  - self.contentEdgeInsets.bottom;
-    CGFloat imageLength  = 0;
-    CGFloat titleLength  = 0;
     BOOL isVertical = (_imageDirection == GGButtonImageAtTop || _imageDirection == GGButtonImageAtBottom);
+    
+    // set Rects's size
     if (isVertical) {
-        usefulHeight -= _imageTitleSpace;
-        imageLength  = usefulHeight * _imageRate;
-        titleLength  = usefulHeight - imageLength;
+        CGFloat usefulHeight = contentRect.size.height - _imageTitleSpace;
+        _imageRect.size = CGSizeMake(contentRect.size.width, usefulHeight * _imageRate);
+        _titleRect.size = CGSizeMake(contentRect.size.width, usefulHeight * (1 - _imageRate));
     } else {
-        usefulWidth  -= _imageTitleSpace;
-        imageLength  = usefulWidth * _imageRate;
-        titleLength  = usefulWidth - imageLength;
+        CGFloat usefulWidth  = contentRect.size.width - _imageTitleSpace;
+        _imageRect.size = CGSizeMake(usefulWidth * _imageRate, contentRect.size.height);
+        _titleRect.size = CGSizeMake(usefulWidth * (1 - _imageRate), contentRect.size.height);
     }
     
-    if (_imageDirection == GGButtonImageAtLeft) {
-        _imageRect = CGRectMake(self.contentEdgeInsets.left,
-                                self.contentEdgeInsets.top,
-                                imageLength,
-                                usefulHeight);
-        _titleRect = CGRectMake(CGRectGetMaxX(_imageRect) + _imageTitleSpace,
-                                self.contentEdgeInsets.top,
-                                titleLength,
-                                usefulHeight);
-    } else if (_imageDirection == GGButtonImageAtRight) {
-        _titleRect = CGRectMake(self.contentEdgeInsets.left,
-                                self.contentEdgeInsets.top,
-                                titleLength,
-                                usefulHeight);
-        _imageRect = CGRectMake(CGRectGetMaxX(_titleRect) + _imageTitleSpace,
-                                self.contentEdgeInsets.top,
-                                imageLength,
-                                usefulHeight);
-    } else if (_imageDirection == GGButtonImageAtTop) {
-        _imageRect = CGRectMake(self.contentEdgeInsets.left,
-                                self.contentEdgeInsets.top,
-                                usefulWidth,
-                                imageLength);
-        _titleRect = CGRectMake(self.contentEdgeInsets.left,
-                                CGRectGetMaxY(_imageRect) + _imageTitleSpace,
-                                usefulWidth,
-                                titleLength);
-    } else if (_imageDirection == GGButtonImageAtBottom) {
-        _titleRect = CGRectMake(self.contentEdgeInsets.left,
-                                self.contentEdgeInsets.top,
-                                usefulWidth,
-                                titleLength);
-        _imageRect = CGRectMake(self.contentEdgeInsets.left,
-                                CGRectGetMaxY(_titleRect) + _imageTitleSpace,
-                                usefulWidth,
-                                imageLength);
+    // set Rects's origin
+    BOOL isImageLeading = (_imageDirection == GGButtonImageAtTop || _imageDirection == GGButtonImageAtLeft);
+    CGRect *leadingRect = isImageLeading ? &_imageRect : &_titleRect;
+    CGRect *tailingRect = isImageLeading ? &_titleRect : &_imageRect;
+    leadingRect->origin = contentRect.origin;
+    if (isVertical) {
+        tailingRect->origin.x = contentRect.origin.x;
+        tailingRect->origin.y = CGRectGetMaxY(*leadingRect) + _imageTitleSpace;
     } else {
-        _imageRect = CGRectZero;
-        _titleRect = CGRectZero;
+        tailingRect->origin.x = CGRectGetMaxX(*leadingRect) + _imageTitleSpace;
+        tailingRect->origin.y = contentRect.origin.y;
     }
     
     // 标记
-    _cacheSize = self.bounds.size;
+    _cacheRect = contentRect;
     _needRecalculate = NO;
 }
 
@@ -141,7 +106,6 @@
         [self layoutSubviews];
     }
 }
-
 - (void)setImageRate:(CGFloat)imageRate {
     if (_imageRate != imageRate) {
         _imageRate  = imageRate;
@@ -149,7 +113,6 @@
         [self layoutSubviews];
     }
 }
-
 - (void)setImageTitleSpace:(CGFloat)imageTitleSpace {
     if (_imageTitleSpace != imageTitleSpace) {
         _imageTitleSpace  = imageTitleSpace;

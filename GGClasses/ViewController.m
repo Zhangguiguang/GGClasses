@@ -43,8 +43,9 @@
     _button.titleLabel.backgroundColor = [UIColor colorWithRed:0.99 green:0.52 blue:0.44 alpha:0.6];
     _button.backgroundColor = [UIColor colorWithRed:0.75 green:0.99 blue:0.38 alpha:1];
     
-    _button.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 15, 10);
-    _button.frame = CGRectMake(100, 100, 100, 100);
+    _button.contentEdgeInsets = UIEdgeInsetsMake(5, 10, 20, 15);
+    _button.bounds = CGRectMake(0, 0, 100, 100);
+    _button.center = self.view.center;
     [self.view addSubview:_button];
     
     // GGButton
@@ -61,9 +62,15 @@
     NSUInteger direction = arc4random() % 4;
     NSLog(@"space : %lf, rate : %.2lf, direction : %lu", space, rate, direction);
     
-    [UIView animateWithDuration:0.4 animations:^{
-        [_button setSpace:space rate:rate direction:direction];
-    }];
+    [UIView animateWithDuration:0.4
+                          delay:0
+                        options:UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+//                         _button.bounds = CGRectMake(0, 0, arc4random() % 100 + 100, arc4random() % 100 + 100);
+//                         _button.frame = CGRectMake(arc4random() % 100 + 100, arc4random() % 100 + 100, arc4random() % 100 + 100, arc4random() % 100 + 100);
+//                         _button.contentEdgeInsets = UIEdgeInsetsMake(arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5);
+                         [_button setSpace:space rate:rate direction:direction];
+    } completion:nil];
 }
 
 @end
