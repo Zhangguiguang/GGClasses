@@ -81,16 +81,15 @@
     }
     
     // set Rects's origin
+    _imageRect.origin = contentRect.origin;
+    _titleRect.origin = contentRect.origin;
     BOOL isImageLeading = (_imageDirection == GGButtonImageAtTop || _imageDirection == GGButtonImageAtLeft);
     CGRect *leadingRect = isImageLeading ? &_imageRect : &_titleRect;
     CGRect *tailingRect = isImageLeading ? &_titleRect : &_imageRect;
-    leadingRect->origin = contentRect.origin;
     if (isVertical) {
-        tailingRect->origin.x = contentRect.origin.x;
         tailingRect->origin.y = CGRectGetMaxY(*leadingRect) + _imageTitleSpace;
     } else {
         tailingRect->origin.x = CGRectGetMaxX(*leadingRect) + _imageTitleSpace;
-        tailingRect->origin.y = contentRect.origin.y;
     }
     
     // 标记
