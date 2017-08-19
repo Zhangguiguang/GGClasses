@@ -65,7 +65,7 @@
     if (_needRecalculate == NO) {
         return ;
     }
-    NSLog(@"calculateImageAndTitleFrame");
+//    NSLog(@"calculateImageAndTitleFrame");
     // recalculate _imageRect _titleRect
     BOOL isVertical = (_imageDirection == GGButtonImageAtTop || _imageDirection == GGButtonImageAtBottom);
     

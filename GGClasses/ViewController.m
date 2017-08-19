@@ -66,9 +66,9 @@
                           delay:0
                         options:UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-//                         _button.bounds = CGRectMake(0, 0, arc4random() % 100 + 100, arc4random() % 100 + 100);
+                         _button.bounds = CGRectMake(0, 0, arc4random() % 100 + 100, arc4random() % 100 + 100);
 //                         _button.frame = CGRectMake(arc4random() % 100 + 100, arc4random() % 100 + 100, arc4random() % 100 + 100, arc4random() % 100 + 100);
-//                         _button.contentEdgeInsets = UIEdgeInsetsMake(arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5);
+                         _button.contentEdgeInsets = UIEdgeInsetsMake(arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5, arc4random() % 10 + 5);
                          [_button setSpace:space rate:rate direction:direction];
     } completion:nil];
 }
