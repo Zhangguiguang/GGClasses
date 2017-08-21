@@ -76,7 +76,7 @@
         _titleRect.size = CGSizeMake(contentRect.size.width, usefulHeight * (1 - _imageRate));
     } else {
         CGFloat usefulWidth  = contentRect.size.width - _imageTitleSpace;
-        _imageRect.size = CGSizeMake(usefulWidth * _imageRate, contentRect.size.height);
+        _imageRect.size = CGSizeMake(usefulWidth * _imageRate,       contentRect.size.height);
         _titleRect.size = CGSizeMake(usefulWidth * (1 - _imageRate), contentRect.size.height);
     }
     
